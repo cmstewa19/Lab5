@@ -1,0 +1,160 @@
+2 separate programs
+	****Contiguous Allocation****
+		Your implementation of the Contiguous Allocation system will NOT keep a list of deleted blocks.   As the file system reaches the 80% full condition, you will compact the disk.  (That is, no re-use of blocks will occur without compaction).
+
+	****Linked-List Allocation****
+	****Linked List Allocation using Memory Table (FAT)****
+		Your Linked-List Allocation & Linked-List Allocation using Memory Table (FAT) implementations will reclaim deleted blocks for reuse (as it runs -- no compaction here).
+
+All three programs will support the following commands:
+	read() and write()
+
+	“dir”			Lists filesystem contents & attributes
+	“store filename numBytes”
+	“access filename”
+	“del filename”
+	“dump”		Writes a disk-block map
+	“dump-all”
+	“help”		Prints this command list
+	“exit”
+
+- possibly write a driver program to test
+- state when file system is full
+- parallel array or object
+
+
+// Here is a test sequence I have embedded in my code for the Contiguous file
+// system.  The tests by-pass the text-based user interface and show the output
+// of each call.  The code used to call the action/command is commented out directly
+// above the output.  Note that all commands do not have output is there was no error.
+// (Note that this does not demonstrate compaction, which happens when the disk is at
+//  80% full...)
+
+//write("testFile", 15000);  
+
+Writing testFile to disk in 15 blocks
+
+// write("testFile2", 2000);
+
+Writing testFile2 to disk in 2 blocks
+
+// write("test3", 2048);
+
+Writing test3 to disk in 2 blocks
+
+// dir();
+Directory Listing:
+   test3:   2048 bytes in 2 blocks, starting at block# 17
+   testFile:   15000 bytes in 15 blocks, starting at block# 0
+   testFile2:   2000 bytes in 2 blocks, starting at block# 15
+
+// del("test3");
+// dir();
+Directory Listing:
+   testFile:   15000 bytes in 15 blocks, starting at block# 0
+   testFile2:   2000 bytes in 2 blocks, starting at block# 15
+
+// write("myFile", 8500);
+Writing myFile to disk in 9 blocks
+
+// dir();
+Directory Listing:
+   myFile:   8500 bytes in 9 blocks, starting at block# 19
+   testFile:   15000 bytes in 15 blocks, starting at block# 0
+   testFile2:   2000 bytes in 2 blocks, starting at block# 15
+
+// read("myFile");
+Reading file myFile:  8500 bytes (9216 bytes on disk)
+
+// dump();
+Block-Map Dump:
+
+    0:  U U U U U U U U U U
+   10:  U U U U U U U D D U
+   20:  U U U U U U U U O O
+   30:  O O O O O O O O O O
+   40:  O O O O O O O O O O
+   50:  O O O O O O O O O O
+   60:  O O O O O O O O O O
+   70:  O O O O O O O O O O
+   80:  O O O O O O O O O O
+   90:  O O O O O O O O O O
+  100:  O O O O O O O O O O
+  110:  O O O O O O O O O O
+  120:  O O O O O O O O O O
+  130:  O O O O O O O O O O
+  140:  O O O O O O O O O O
+  150:  O O O O O O O O O O
+  160:  O O O O O O O O O O
+  170:  O O O O O O O O O O
+  180:  O O O O O O O O O O
+  190:  O O O O O O O O O O
+
+// del("test3");
+Error deleting file:  test3
+
+// write("myFile1", 9049);
+Writing myFile1 to disk in 9 blocks
+
+// write("myFile2", 9049);
+Writing myFile2 to disk in 9 blocks
+
+// write("myFile3", 9049);
+Writing myFile3 to disk in 9 blocks
+
+// write("myFile4", 9049);
+Writing myFile4 to disk in 9 blocks
+
+// write("myFile5", 9049);
+Writing myFile5 to disk in 9 blocks
+
+// write("myFile6", 9049);
+Writing myFile6 to disk in 9 blocks
+
+// write("myFile7", 9049);
+Writing myFile7 to disk in 9 blocks
+
+// write("myFile8", 9049);
+Writing myFile8 to disk in 9 blocks
+
+// dir();
+Directory Listing:
+   myFile:   8500 bytes in 9 blocks, starting at block# 19
+   myFile1:   9049 bytes in 9 blocks, starting at block# 28
+   myFile2:   9049 bytes in 9 blocks, starting at block# 37
+   myFile3:   9049 bytes in 9 blocks, starting at block# 46
+   myFile4:   9049 bytes in 9 blocks, starting at block# 55
+   myFile5:   9049 bytes in 9 blocks, starting at block# 64
+   myFile6:   9049 bytes in 9 blocks, starting at block# 73
+   myFile7:   9049 bytes in 9 blocks, starting at block# 82
+   myFile8:   9049 bytes in 9 blocks, starting at block# 91
+   testFile:   15000 bytes in 15 blocks, starting at block# 0
+   testFile2:   2000 bytes in 2 blocks, starting at block# 15
+
+// dump();
+Block-Map Dump: // U for used, D for deleted
+
+    0:  U U U U U U U U U U
+   10:  U U U U U U U D D U
+   20:  U U U U U U U U U U
+   30:  U U U U U U U U U U
+   40:  U U U U U U U U U U
+   50:  U U U U U U U U U U
+   60:  U U U U U U U U U U
+   70:  U U U U U U U U U U
+   80:  U U U U U U U U U U
+   90:  U U U U U U U U U U
+  100:  O O O O O O O O O O
+  110:  O O O O O O O O O O
+  120:  O O O O O O O O O O
+  130:  O O O O O O O O O O
+  140:  O O O O O O O O O O
+  150:  O O O O O O O O O O
+  160:  O O O O O O O O O O
+  170:  O O O O O O O O O O
+  180:  O O O O O O O O O O
+  190:  O O O O O O O O O O
+
+-- 200 char array to keep track of this
+-- when dumping FAT dump pointer table (debugging purposes)
+-- linked list and FAT will share a lot of code
