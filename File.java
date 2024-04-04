@@ -16,7 +16,7 @@ public class File {
     private int endIndex;
 
     // constructor
-    public FileObject(String fileName, int fileSize, int numBlocks, int startIndex, int endIndex) {
+    public void FileObject(String fileName, int fileSize, int numBlocks, int startIndex, int endIndex) {
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.numBlocks = numBlocks;
