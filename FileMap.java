@@ -22,15 +22,15 @@ public class FileMap {
     }
 
     // add a file
-    public void addFile(String fileName, int fileSize, int numBlocks, int startIndex, int endIndex) {
+    public void addFile(String fileName, int fileSize, int numBlocks, int startIndex) {
         Map<String, Integer> fileAttributes = new HashMap<>();
         fileAttributes.put("filesize", fileSize);
         fileAttributes.put("numblocks", numBlocks);
         fileAttributes.put("startindex", startIndex);
-        fileAttributes.put("endindex", endIndex);
+
         fileMap.put(fileName, fileAttributes);
     }
-
+    
     // delete file by file name
     public void deleteFile(String fileName) {
         fileMap.remove(fileName);
@@ -67,16 +67,7 @@ public class FileMap {
         return fileAttributes.getOrDefault("startindex", -1);
     }
 
-    public int getEndIndex(String fileName) {
-        Map<String, Integer> fileAttributes = fileMap.get(fileName);
-        return fileAttributes.getOrDefault("endindex", -1);
-    }
-
     public Set<String> getFileNames() {     // method to return all fileNames in the hashmap
         return new HashSet<>(fileMap.keySet());
     }
 }
-
-
-
-

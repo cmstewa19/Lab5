@@ -81,7 +81,7 @@ public class ContigFileAllocation{
                 blockArray[i] = USED;         
         }
         // update fileMap
-        fileMap.addFile(fileName, fileSize, numBlocks, startIndex, endIndex);
+        fileMap.addFile(fileName, fileSize, numBlocks, startIndex);
         writeSuccess = true;
 
         if (writeSuccess) {
@@ -111,7 +111,7 @@ public class ContigFileAllocation{
         
         // get start and end indices from fileMap
         int startIndex = fileMap.getStartIndex(fileName);
-        int endIndex = fileMap.getEndIndex(fileName);
+        int endIndex = fileMap.getStartIndex(fileName) + fileMap.getNumBlocks(fileName);
 
         boolean deleteSuccess = false;
 
@@ -133,7 +133,7 @@ public class ContigFileAllocation{
 
     // dump
     public void dump(char[] blockArray) {
-        System.out.println("Block-Map Dump:");
+        System.out.println("Block Status Dump:");
         // print array
         for (int i = 0; i < blockArray.length; i++) {
             if (i % 10 == 0) {
@@ -160,7 +160,7 @@ public class ContigFileAllocation{
             // iterate through each file in the fileMap to check if the block belongs to it
             for (String fileName : fileMap.getFileNames()) { 
                 int startIndex = fileMap.getStartIndex(fileName);
-                int endIndex = fileMap.getEndIndex(fileName); 
+                int endIndex = fileMap.getStartIndex(fileName) + fileMap.getNumBlocks(fileName);
 
                 if (i >= startIndex && i < endIndex) {
                     allocatedToFile = fileName;
@@ -170,7 +170,7 @@ public class ContigFileAllocation{
 
             // print information about the block
             if (allocatedToFile != null) {
-                System.out.printf("Block #%d: %s%n", i, allocatedToFile);
+                System.out.printf("Block %d -> %s%n", i, allocatedToFile);
             }
         }
     }
