@@ -218,7 +218,6 @@ public class ContigFileAllocation{
         return false; // not enough space
     }
 
-
     // driver 
     public void driver(){
         String choice; 
